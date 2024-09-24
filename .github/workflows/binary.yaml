@@ -61,13 +61,13 @@ jobs:
 
       - name: Extract artifact and attestation
         run: |
-          mkdir -p ~/build/
-          cp ${{ steps.certificate.outputs.bundle-path }} result/bin/dune ~/build/
-          echo hi
+          mkdir -p ~/${{ matrix.name }}/
+          cp ${{ steps.certificate.outputs.bundle-path }} result/bin/dune ~/${{ matrix.name }}/
+          tar -Pczvf ~/${{ matrix.name }}.tar.gz ~/${{matrix.name}}
 
       - uses: actions/upload-artifact@v4
         with:
-          path: ~/build/*
+          path: ~/{{ matrix.name }}.tar.gz
           name: ${{ matrix.name }}
 
 
