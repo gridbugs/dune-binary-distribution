@@ -63,6 +63,7 @@ jobs:
         run: |
           mkdir -p ~/build/
           cp ${{ steps.certificate.outputs.bundle-path }} result/bin/dune ~/build/
+          echo hi
 
       - uses: actions/upload-artifact@v4
         with:
