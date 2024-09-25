@@ -61,13 +61,13 @@ jobs:
 
       - name: Extract artifact and attestation
         run: |
-          mkdir -p ~/${{ matrix.name }}/
-          cp ${{ steps.certificate.outputs.bundle-path }} result/bin/dune ~/${{ matrix.name }}/
-          tar -czvf ~/${{ matrix.name }}.tar.gz -C ~ ${{ matrix.name }}
+          mkdir -p ~/dune-${{ matrix.name }}/
+          cp ${{ steps.certificate.outputs.bundle-path }} result/bin/dune ~/dune-${{ matrix.name }}/
+          tar -czvf ~/${{ matrix.name }}.tar.gz -C ~ dune-${{ matrix.name }}
 
       - uses: actions/upload-artifact@v4
         with:
-          path: ~/${{ matrix.name }}.tar.gz
+          path: ~/dune-${{ matrix.name }}.tar.gz
           name: ${{ matrix.name }}
 
 
@@ -95,8 +95,8 @@ jobs:
 
       - name: Get dune accessible
         run: |
-          tar -xvf ${{ matrix.name }}.tar.gz
-          mv ./${{ matrix.name }}/dune ./dune
+          tar -xvf dune-${{ matrix.name }}.tar.gz
+          mv ./dune-${{ matrix.name }}/dune ./dune
 
       - name: Check dune is working
         run: |
