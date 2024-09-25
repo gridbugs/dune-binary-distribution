@@ -63,7 +63,7 @@ jobs:
         run: |
           mkdir -p ~/dune-${{ matrix.name }}/
           cp ${{ steps.certificate.outputs.bundle-path }} result/bin/dune ~/dune-${{ matrix.name }}/
-          tar -czvf ~/${{ matrix.name }}.tar.gz -C ~ dune-${{ matrix.name }}
+          tar -czvf ~/dune-${{ matrix.name }}.tar.gz -C ~ dune-${{ matrix.name }}
 
       - uses: actions/upload-artifact@v4
         with:
