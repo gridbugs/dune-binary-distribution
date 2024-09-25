@@ -63,7 +63,7 @@ jobs:
         run: |
           mkdir -p ~/${{ matrix.name }}/
           cp ${{ steps.certificate.outputs.bundle-path }} result/bin/dune ~/${{ matrix.name }}/
-          tar -Pczvf ~/${{ matrix.name }}.tar.gz ~/${{ matrix.name }}
+          tar -czvf ~/${{ matrix.name }}.tar.gz -C ~ ${{ matrix.name }}
 
       - uses: actions/upload-artifact@v4
         with:
@@ -95,7 +95,7 @@ jobs:
 
       - name: Get dune accessible
         run: |
-          tar xvf ${{ matrix.name }}.tar.gz
+          tar -xvf ${{ matrix.name }}.tar.gz
           mv ./${{ matrix.name }}/dune ./dune
 
       - name: Check dune is working
