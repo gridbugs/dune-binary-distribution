@@ -95,6 +95,7 @@ jobs:
 
       - name: Get dune accessible
         run: |
+          ls
           tar -xvf dune-${{ matrix.name }}.tar.gz
           mv ./dune-${{ matrix.name }}/dune ./dune
 
