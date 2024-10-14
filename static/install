@@ -81,7 +81,6 @@ bin_dir="$install_dir/bin"
 tmp_dir="$install_dir/tmp"
 exe="$bin_dir/dune"
 tmp_tar="$tmp_dir/$tar_target"
-tilde_bin_dir=$(tildify "$bin_dir")
 
 ensure_command "tar"
 # technically gunzip probably but they will both exist
