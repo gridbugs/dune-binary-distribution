@@ -116,6 +116,7 @@ success_bold "$(tildify "$exe")"
 echo
 echo
 
+already_installed=false
 
 case $(basename "$SHELL") in
 fish)
@@ -128,6 +129,7 @@ fish)
     if [ -f "$fish_config" ] && match=$(grep -n ".dune/env/env.fish" "$fish_config"); then
         echo "Shell configuration for dune appears to already exist in \"$fish_config\":"
         echo "$match"
+        already_installed=true
         refresh_command="source $tilde_fish_config"
     elif [ -w "$fish_config" ]; then
         printf "\n# dune\n%s\n" "source $env_file" >> "$fish_config"
@@ -152,6 +154,7 @@ zsh)
     if [ -f "$zsh_config" ] && match=$(grep -n ".dune/env/env.zsh" "$zsh_config"); then
         echo "Shell configuration for dune appears to already exist in \"$zsh_config\":"
         echo "$match"
+        already_installed=true
         refresh_command="exec $SHELL"
     elif [ -w "$zsh_config" ]; then
         printf "\n# dune\n%s\n" "source $env_file" >>"$zsh_config"
@@ -175,19 +178,18 @@ bash)
         bash_configs="$bash_configs $XDG_CONFIG_HOME/.bash_profile $XDG_CONFIG_HOME/.bashrc $XDG_CONFIG_HOME/bash_profile $XDG_CONFIG_HOME/bashrc"
     fi
 
-    already_configured=false
     for bash_config in $bash_configs; do
         # deliberately omit the home directory from the pattern so "~" and "$HOME" can be used interchangeably
         if [ -f "$bash_config" ] && match=$(grep -n ".dune/env/env.bash" "$bash_config"); then
             echo "Shell configuration for dune appears to already exist in \"$bash_config\":"
             echo "$match"
             refresh_command="source $bash_config"
-            already_configured=true
+            already_installed=true
             break
         fi
     done
 
-    if [ "$already_configured" = false ]; then
+    if [ "$already_installed" = false ]; then
         set_manually=true
         for bash_config in $bash_configs; do
             tilde_bash_config=$(tildify "$bash_config")
@@ -218,17 +220,20 @@ bash)
     ;;
 esac
 
-echo
-info "To get started, run:"
-echo
 
-if [ -n "${refresh_command+x}" ]; then
-    info_bold "  $refresh_command"
+if [ "$already_installed" = false ]; then
+    echo
+    info "To get started, run:"
+    echo
+
+    if [ -n "${refresh_command+x}" ]; then
+        info_bold "  $refresh_command"
+        echo
+    fi
+
+    info_bold "  dune --help"
     echo
 fi
-
-info_bold "  dune --help"
-echo
 
 # end of main
 }
