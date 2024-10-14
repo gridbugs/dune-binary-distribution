@@ -67,10 +67,10 @@ case $(uname -ms) in
     error "The Dune Developer Preview does not currently support $(uname -ms)."
 esac
 
-today=$(date +"%Y-%m-%d")
+today=2024-10-09
 tar_target_name="dune-$today-$target"
 tar_target="$tar_target_name.tar.gz"
-dune_tar_uri="https://get.dune.build/$today/$target/$tar_target"
+dune_tar_uri="https://github.com/gridbugs/dune-binary-distribution/releases/download/2024-10-09.1/dune-2024-10-09-x86_64-unknown-linux-musl.tar.gz"
 
 install_dir="$HOME/.dune"
 bin_dir="$install_dir/bin"
