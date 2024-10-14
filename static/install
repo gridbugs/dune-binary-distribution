@@ -79,7 +79,6 @@ exe="$bin_dir/dune"
 tmp_tar="$tmp_dir/$tar_target"
 tmp_tar_dir="$tmp_dir/$tar_target_name"
 tmp_exe="$tmp_tar_dir/dune"
-tilde_bin_dir=$(tildify "$bin_dir")
 
 command -v tar >/dev/null 2>&1 ||
     error "Failed to find tar. This script needs tar to be able to install dune."
@@ -104,10 +103,12 @@ tar -xf "$tmp_tar" -C "$tmp_dir" > /dev/null 2>&1 ||
 mv "$tmp_exe" "$exe" ||
     error "Failed to move executable from $tmp_exe to $exe"
 
-rm -rf "$install_dir/env" && mv "$tmp_tar_dir/env" "$install_dir" ||
+rm -rf "$install_dir/env"
+mv "$tmp_tar_dir/env" "$install_dir" ||
     error "Failed to move env from $tmp_tar_dir to $install_dir"
 
-rm -rf "$install_dir/completions" && mv "$tmp_tar_dir/completions" "$install_dir" ||
+rm -rf "$install_dir/completions"
+mv "$tmp_tar_dir/completions" "$install_dir" ||
     error "Failed to move completions from $tmp_tar_dir to $install_dir"
 
 success "dune $target was installed successfully to"
@@ -124,7 +125,7 @@ fish)
     tilde_fish_config=$(tildify "$fish_config")
 
     # deliberately omit the home directory from the pattern so "~" and "$HOME" can be used interchangeably
-    if [ -f "$fish_config" ] && match=$(grep -n ".dune/env/env.fish" $fish_config); then
+    if [ -f "$fish_config" ] && match=$(grep -n ".dune/env/env.fish" "$fish_config"); then
         echo "Shell configuration for dune appears to already exist in \"$fish_config\":"
         echo "$match"
         refresh_command="source $tilde_fish_config"
@@ -148,7 +149,7 @@ zsh)
     tilde_zsh_config=$(tildify "$zsh_config")
 
     # deliberately omit the home directory from the pattern so "~" and "$HOME" can be used interchangeably
-    if [ -f "$zsh_config" ] && match=$(grep -n ".dune/env/env.zsh" $zsh_config); then
+    if [ -f "$zsh_config" ] && match=$(grep -n ".dune/env/env.zsh" "$zsh_config"); then
         echo "Shell configuration for dune appears to already exist in \"$zsh_config\":"
         echo "$match"
         refresh_command="exec $SHELL"
@@ -175,9 +176,9 @@ bash)
     fi
 
     already_configured=false
-    for bash_config in "$bash_configs"; do
+    for bash_config in $bash_configs; do
         # deliberately omit the home directory from the pattern so "~" and "$HOME" can be used interchangeably
-        if [ -f "$bash_config" ] && match=$(grep -n ".dune/env/env.bash" $bash_config); then
+        if [ -f "$bash_config" ] && match=$(grep -n ".dune/env/env.bash" "$bash_config"); then
             echo "Shell configuration for dune appears to already exist in \"$bash_config\":"
             echo "$match"
             refresh_command="source $bash_config"
@@ -192,9 +193,9 @@ bash)
             tilde_bash_config=$(tildify "$bash_config")
 
             if [ -w "$bash_config" ]; then
-                printf "\n# dune\n%s\n" "$command" >> "$bash_config"
+                printf "\n# dune\n%s\n" "source $env_file" >>"$bash_config"
 
-                info "Added \"$tilde_bin_dir\" to \$PATH in \"$tilde_bash_config\""
+                info "Sourced \"$env_file\" in \"$tilde_bash_config\""
                 echo
 
                 refresh_command="source $bash_config"
@@ -204,9 +205,7 @@ bash)
         done
 
         if [ $set_manually = true ]; then
-            echo "Manually add the directory to $tilde_bash_config (or similar):"
-
-            info_bold "  $command"
+            echo "To use dune you will need to source the file \"$env_file\""
             echo
         fi
     fi
