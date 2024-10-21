@@ -70,7 +70,7 @@ esac
 today=$(date +"%Y-%m-%d")
 tar_target_name="dune-$today-$target"
 tar_target="$tar_target_name.tar.gz"
-dune_tar_uri="https://preview.dune.build/latest/$target"
+dune_tar_uri="https://raw.githubusercontent.com/gridbugs/dune-binary-distribution/refs/heads/tmp-2024-10-21.0/static/install"
 
 install_dir="$HOME/.dune"
 bin_dir="$install_dir/bin"
